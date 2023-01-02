@@ -1,0 +1,37 @@
+
+Migrating a VM from VirtualBox to Proxmox Ve
+
+root@pve1:~# pveversion 
+pve-manager/7.3-3/c3928077 (running kernel: 5.15.74-1-pve)
+Virtual box version 6.1
+
+
+1)Shutdown Vm
+2)Click on File --> Export Appliance
+Copy server file to proxmox server
+3)scp nagios.ova root@192.168.1.125:/tmp/
+
+Unzip server files.
+
+4)root@pve1:/tmp/Nagiso# tar -xf nagios.ova
+root@pve1:/tmp/Nagios/
+# ls
+nagios-disk001.vmdk  nagios.mf  nagios.ova  nagios.ovf
+
+File system convert
+
+5)qemu-img convert -f vmdk nagios-disk001.vmdk -O qcow2 nagios.qcow2
+
+Create VM in Proxmos server.
+
+i)Detach the HDD(hard disk)
+ii)Remove the HDD(hard disk)
+iii)qm importdisk  101 nagios.qcow2 local-lvm 
+
+Successfully imported disk as 'unused0:local-lvm:vm-101-disk-0'
+click on New HDD & Add HDD
+
+Go to Option change Boot sequence.
+
+IF any issue to start vm than shutdown proxmos server & start again
+
